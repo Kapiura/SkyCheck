@@ -51,20 +51,19 @@ fun WeatherDetailsScreen(city: String, viewModel: FavouriteViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         weatherData?.let {
-            Text(text = "City: ${it.name}", style = MaterialTheme.typography.titleLarge)
+            Text(text = "Miasto: ${it.name}", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Temperature: ${it.main.temp}°C", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Temperatura: ${it.main.temp}°C", style = MaterialTheme.typography.bodyLarge)
             Text(text = "Min Temp: ${it.main.temp_min}°C", style = MaterialTheme.typography.bodyLarge)
             Text(text = "Max Temp: ${it.main.temp_max}°C", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Weather: ${it.weather.firstOrNull()?.description}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Humidity: ${it.main.humidity}%", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Wind: ${it.wind?.speed} m/s", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Opis: ${it.weather.firstOrNull()?.description}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Wilgotność: ${it.main.humidity}%", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Wiatr: ${it.wind?.speed} m/s", style = MaterialTheme.typography.bodyLarge)
             Button(
                 onClick = {
                     viewModel.insert(Favourite(cityName = it.name))
                 }
-            )
-            {
+            ) {
                 Text("Dodaj do ulubionych")
             }
         } ?: run {

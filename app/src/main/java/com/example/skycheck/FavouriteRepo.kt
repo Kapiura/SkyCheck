@@ -1,13 +1,18 @@
 package com.example.skycheck
 
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 class FavouriteRepo(private val favDao: FavDao)
 {
-    val allGrades: Flow<List<Favourite>> = favDao.getAllCities()
+    val allCities: Flow<List<Favourite>> = favDao.getAllCities()
 
     fun getCityById(cityId: Int): Flow<Favourite?> {
         return favDao.getCityById(cityId)
+    }
+
+    suspend fun getCityByName(cityName: String): Favourite? {
+        return favDao.getCityByName(cityName)
     }
 
     suspend fun insert(fav: Favourite)
@@ -24,4 +29,5 @@ class FavouriteRepo(private val favDao: FavDao)
     {
         favDao.deleteGrade(fav)
     }
+
 }

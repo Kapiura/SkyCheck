@@ -3,7 +3,6 @@ package com.example.skycheck
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// Retrofit Instance
 object RetrofitInstance {
     private const val BASE_URL = "https://api.openweathermap.org/"
 

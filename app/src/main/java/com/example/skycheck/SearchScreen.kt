@@ -30,7 +30,7 @@ import retrofit2.Response
 @Composable
 fun SearchScreen(nav: NavController) {
     var city by remember { mutableStateOf("Warsaw") }
-    var weatherInfo by remember { mutableStateOf("Enter city name and press Get Weather") }
+    var weatherInfo by remember { mutableStateOf("Wpisz nazwe miasta by wyszukać pogodę") }
     val apiKey = "7b7fe4dd87c83d143654327eaa81fdd8"
 
     Column(
@@ -43,36 +43,34 @@ fun SearchScreen(nav: NavController) {
         TextField(
             value = city,
             onValueChange = { city = it },
-            label = { Text("City") },
+            label = { Text("Miasto") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button to fetch weather data
         Button(onClick = {
             RetrofitInstance.api.getWeather(city, apiKey).enqueue(object : Callback<WeatherResponse> {
                 override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                     if (response.isSuccessful) {
                         val weather = response.body()
                         if (weather != null) {
-                            weatherInfo = "Weather data fetched successfully"
-                            // Navigate to WeatherDetailsScreen
+                            weatherInfo = "Pomyślnie pobrano dane"
                             nav.navigate("weatherDetailsScreen/${city}")
                         } else {
-                            weatherInfo = "No data available"
+                            weatherInfo = "Brak danych"
                         }
                     } else {
-                        weatherInfo = "Error: ${response.code()} - ${response.message()}"
+                        weatherInfo = "Błąd: ${response.code()} - ${response.message()}"
                     }
                 }
 
                 override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                    Log.e("WeatherApp", "Error: ${t.localizedMessage}")
-                    weatherInfo = "Failure: ${t.localizedMessage}"
+                    Log.e("WeatherApp", "Błąd: ${t.localizedMessage}")
+                    weatherInfo = "Błąd: ${t.localizedMessage}"
                 }
             })
         }) {
-            Text("Get Weather")
+            Text("Wyszukaj")
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = weatherInfo, style = MaterialTheme.typography.bodyLarge)

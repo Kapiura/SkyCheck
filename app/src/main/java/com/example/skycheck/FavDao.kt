@@ -9,12 +9,15 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface FavDao{
+interface FavDao {
     @Query("SELECT * FROM favourites")
     fun getAllCities(): Flow<List<Favourite>>
 
     @Query("SELECT * FROM favourites WHERE id = :cityId")
     fun getCityById(cityId: Int): Flow<Favourite?>
+
+    @Query("SELECT * FROM favourites WHERE cityName = :cityName")
+    suspend fun getCityByName(cityName: String): Favourite?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGrade(fav: Favourite)

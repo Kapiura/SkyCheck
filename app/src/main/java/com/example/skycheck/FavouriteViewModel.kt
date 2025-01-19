@@ -7,11 +7,14 @@ import kotlinx.coroutines.launch
 
 class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
 {
-    val allCities: Flow<List<Favourite>> = repo.allGrades
+    val allCities: Flow<List<Favourite>> = repo.allCities
 
     fun getCityById(cityId: Int): Flow<Favourite?> {
         return repo.getCityById(cityId)
     }
+
+    suspend fun getCityByName(cityName: String): Favourite? = repo.getCityByName(cityName)
+
 
     fun insert(fav: Favourite) = viewModelScope.launch{
         repo.insert(fav)
@@ -24,4 +27,5 @@ class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
     fun delete(fav: Favourite) = viewModelScope.launch{
         repo.delete(fav)
     }
+
 }
