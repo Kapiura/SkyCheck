@@ -17,12 +17,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun WeatherDetailsScreen(city: String, viewModel: FavouriteViewModel) {
+fun WeatherDetailsScreen(nav: NavController, city: String, viewModel: FavouriteViewModel) {
     var weatherData by remember { mutableStateOf<WeatherResponse?>(null) }
     val apiKey = "7b7fe4dd87c83d143654327eaa81fdd8"
     val weatherApi = RetrofitInstance.api
@@ -66,9 +67,12 @@ fun WeatherDetailsScreen(city: String, viewModel: FavouriteViewModel) {
             ) {
                 Text("Dodaj do ulubionych")
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { nav.navigate("forecast/${it.name}") }) {
+                Text("Zobacz prognozę")
+            }
         } ?: run {
             Text(text = "Loading weather data...", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
-

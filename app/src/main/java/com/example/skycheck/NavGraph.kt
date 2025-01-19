@@ -25,7 +25,7 @@ fun NavGraph(nav: NavHostController, viewModel: FavouriteViewModel) {
         }
         composable("weatherDetailsScreen/{city}") { backStackEntry ->
             val city = backStackEntry.arguments?.getString("city") ?: "Unknown"
-            WeatherDetailsScreen(city = city, viewModel)
+            WeatherDetailsScreen(nav = nav, city = city, viewModel = viewModel)
         }
         composable(
             "detailFav/{cityId}",
@@ -33,6 +33,10 @@ fun NavGraph(nav: NavHostController, viewModel: FavouriteViewModel) {
         ) { backStackEntry ->
             val cityId = backStackEntry.arguments?.getInt("cityId") ?: 0
             FavouriteDetail(nav, viewModel, cityId)
+        }
+        composable("forecast/{city}") { backStackEntry ->
+            val city = backStackEntry.arguments?.getString("city") ?: "Unknown"
+            ForecastScreen(city)
         }
     }
 }

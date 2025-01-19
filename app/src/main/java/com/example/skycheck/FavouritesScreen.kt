@@ -65,7 +65,5 @@ fun FavouritesScreen(nav: NavController, viewModel: FavouriteViewModel) {
     {
         Text("Brak miast dodanych do ulubionych")
     }
-
-
 }
 
