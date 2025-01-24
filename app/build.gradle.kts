@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.skycheck"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -104,5 +104,7 @@ dependencies {
     implementation(libs.vico.compose.m3)
     implementation(libs.vico.core)
     implementation(libs.vico.views)
+    // chart
+    implementation("co.yml:ycharts:2.1.0")
 }
 
