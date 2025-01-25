@@ -7,5 +7,5 @@ sealed class BottomBar(
     data object MainScreen : BottomBar(Screens.MainScreen.route, "Ekran Główny")
     data object SearchScreen : BottomBar(Screens.SearchScreen.route, "Wyszukiwanie")
     data object FavoritesScreen : BottomBar(Screens.FavoritesScreen.route, "Ulubione")
-    data object SettingsScreen : BottomBar(Screens.FavoritesScreen.route, "Ustawienia")
+    data object SettingsScreen : BottomBar(Screens.SettingsScreen.route, "Ustawienia")
 }

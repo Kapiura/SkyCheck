@@ -1,3 +1,6 @@
+import org.codehaus.groovy.runtime.DefaultGroovyMethods.each
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +12,10 @@ android {
     namespace = "com.example.skycheck"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.skycheck"
         minSdk = 26
@@ -18,16 +25,26 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { localProperties.load(it) }
+    }
+    val apiKey: String = localProperties.getProperty("API_KEY") ?: ""
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    android {
+        buildTypes {
+            getByName("debug") {
+                buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            }
+            getByName("release") {
+                buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            }
         }
     }
+
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -59,6 +76,9 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.storage)
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,6 +89,7 @@ dependencies {
 
     val room_version = "2.6.1"
 
+    implementation("androidx.compose.material3:material3:1.0.0")
     implementation("androidx.room:room-runtime:$room_version")
 
     // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
@@ -77,6 +98,7 @@ dependencies {
 
     // If this project only uses Java source, use the Java annotationProcessor
     // No additional plugins are necessary
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
@@ -105,6 +127,8 @@ dependencies {
     implementation(libs.vico.core)
     implementation(libs.vico.views)
     // chart
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1") // Zaktualizuj wersję, jeśli trzeba
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0") // Jeżeli korzystasz z Compose
     implementation("co.yml:ycharts:2.1.0")
 }
 

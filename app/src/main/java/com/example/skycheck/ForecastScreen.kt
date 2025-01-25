@@ -1,19 +1,13 @@
 package com.example.skycheck
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
@@ -34,12 +28,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun ForecastScreen(city: String) {
+fun ForecastScreen(city: String, isDarkTheme: MutableState<Boolean>) {
     var forecastData by remember { mutableStateOf<ForecastResponse?>(null) }
-    val apiKey = "7b7fe4dd87c83d143654327eaa81fdd8"
+    val apiKey = BuildConfig.API_KEY;
     val weatherApi = RetrofitInstance.api
 
-    // Pobierz dane prognozy dla danego miasta
     LaunchedEffect(city) {
         weatherApi.getForecast(city, apiKey).enqueue(object : Callback<ForecastResponse> {
             override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
@@ -56,7 +49,6 @@ fun ForecastScreen(city: String) {
         })
     }
 
-    // Przekształć dane prognozy na listę punktów
     val pointsData: List<Point> = forecastData?.list?.mapIndexed { index, forecastItem ->
         Point(
             x = index.toFloat(),
@@ -70,33 +62,33 @@ fun ForecastScreen(city: String) {
         .labelData { index ->
             forecastData?.list?.getOrNull(index)?.dt_txt?.let { dtTxt ->
                 val parts = dtTxt.split(" ")
-                val dateTimeString = parts[0] + " " + parts[1] // Połącz datę i godzinę
+                val dateTimeString = parts[0] + " " + parts[1]
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val date = inputFormat.parse(dateTimeString)
-
-                // Sformatuj datę na format dd.MM - HH:mm
                 val outputFormat = SimpleDateFormat("dd.MM - HH:mm", Locale.getDefault())
                 val formattedDate = date?.let { outputFormat.format(it) } ?: ""
                 formattedDate
             } ?: ""
         }
         .labelAndAxisLinePadding(15.dp)
+        .backgroundColor(Color.White)
         .build()
 
 
+
     val yAxisData = AxisData.Builder()
-        .steps(5) // Liczba kroków na osi Y
+        .steps(5)
         .labelData { step ->
             val minTemp = pointsData.minOfOrNull { it.y } ?: 0f
             val maxTemp = pointsData.maxOfOrNull { it.y } ?: 100f
             val range = maxTemp - minTemp
-            val value = minTemp + (step * range / 5) // Obliczamy wartość dla danego kroku
-            "${value.formatToSinglePrecision()}°C" // Dodajemy °C do wartości
+            val value = minTemp + (step * range / 5)
+            "${value.formatToSinglePrecision()}°C"
         }
         .labelAndAxisLinePadding(20.dp)
+        .backgroundColor(Color.White)
         .build()
 
-    // Dane do wykresu liniowego
     val lineChartData = LineChartData(
         linePlotData = LinePlotData(
             lines = listOf(
@@ -120,8 +112,8 @@ fun ForecastScreen(city: String) {
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,  // Wyśrodkowanie w poziomie
-        verticalArrangement = Arrangement.Center // Wyśrodkowanie w pionie
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         forecastData?.let { forecast ->
             Text(
@@ -130,12 +122,11 @@ fun ForecastScreen(city: String) {
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Wyśrodkowanie wykresu
             LineChart(
                 modifier = Modifier
-                    .fillMaxWidth() // Szerokość wykresu wypełnia ekran
-                    .height(300.dp) // Wysokość wykresu
-                    .align(Alignment.CenterHorizontally), // Wyśrodkowanie wykresu
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .align(Alignment.CenterHorizontally),
                 lineChartData = lineChartData
             )
         } ?: run {

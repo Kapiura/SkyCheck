@@ -31,7 +31,7 @@ import retrofit2.Response
 fun SearchScreen(nav: NavController) {
     var city by remember { mutableStateOf("Warsaw") }
     var weatherInfo by remember { mutableStateOf("Wpisz nazwe miasta by wyszukać pogodę") }
-    val apiKey = "7b7fe4dd87c83d143654327eaa81fdd8"
+    val apiKey = BuildConfig.API_KEY;
 
     Column(
         modifier = Modifier

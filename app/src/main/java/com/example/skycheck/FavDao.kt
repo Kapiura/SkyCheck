@@ -16,7 +16,10 @@ interface FavDao {
     @Query("SELECT * FROM favourites WHERE id = :cityId")
     fun getCityById(cityId: Int): Flow<Favourite?>
 
-    @Query("SELECT * FROM favourites WHERE cityName = :cityName")
+    @Query("SELECT EXISTS(SELECT 1 FROM favourites WHERE cityName = :cityName LIMIT 1)")
+    suspend fun isCityFavourite(cityName: String): Boolean  // Zwraca true, jeśli miasto jest w ulubionych
+
+    @Query("SELECT * FROM favourites WHERE cityName = :cityName LIMIT 1")
     suspend fun getCityByName(cityName: String): Favourite?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -15,6 +15,10 @@ class FavouriteRepo(private val favDao: FavDao)
         return favDao.getCityByName(cityName)
     }
 
+    suspend fun isCityFavourite(cityName: String): Boolean {
+        return favDao.getCityByName(cityName) != null
+    }
+
     suspend fun insert(fav: Favourite)
     {
         favDao.insertGrade(fav)
