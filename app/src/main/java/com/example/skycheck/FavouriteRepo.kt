@@ -1,6 +1,5 @@
 package com.example.skycheck
 
-import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 class FavouriteRepo(private val favDao: FavDao)

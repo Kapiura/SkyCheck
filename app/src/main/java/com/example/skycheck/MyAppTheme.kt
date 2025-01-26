@@ -15,7 +15,6 @@ fun MyAppTheme(darkTheme: Boolean = false, content: @Composable () -> Unit) {
     )
 }
 
-// Light theme
 private val LightColorPalette = lightColorScheme(
     primary = Color(0xFF6200EE),
     secondary = Color(0xFF03DAC6),
@@ -27,7 +26,6 @@ private val LightColorPalette = lightColorScheme(
     onSurface = Color.Black
 )
 
-// Dark theme
 private val DarkColorPalette = darkColorScheme(
     primary = Color(0xFFBB86FC),
     secondary = Color(0xFF03DAC6),

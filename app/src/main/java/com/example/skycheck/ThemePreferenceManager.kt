@@ -1,44 +1,25 @@
 package com.example.skycheck
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
+import android.content.SharedPreferences
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import androidx.datastore.preferences.preferencesDataStore
-import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-// Definicja dataStore za pomocą preferencesDataStore
-val Context.dataStore by preferencesDataStore(name = "settings")
+class ThemePreferenceManager(context: Context) {
 
-class ThemePreferenceManager(private val context: Context) {
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
-    private object PreferencesKeys {
-        val THEME_MODE = booleanPreferencesKey("theme_mode")
+    private val _themePreference = MutableStateFlow(getThemePreference())
+    val themePreference: Flow<Boolean> get() = _themePreference.asStateFlow()
+
+    fun saveThemePreference(isDarkTheme: Boolean) {
+        sharedPreferences.edit().putBoolean("dark_mode_state", isDarkTheme).apply()
+        _themePreference.value = isDarkTheme
     }
 
-    // Pobranie danych motywu z dataStore
-    val themePreference: Flow<Boolean> = context.dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                // Jeśli błąd, ustaw domyślną wartość
-                emit(emptyPreferences())
-            } else {
-                throw exception
-            }
-        }
-        .map { preferences ->
-            preferences[PreferencesKeys.THEME_MODE] ?: false // Domyślnie motyw jasny
-        }
-
-    // Zapisanie preferencji motywu do dataStore
-    suspend fun saveThemePreference(isDarkTheme: Boolean) {
-        context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.THEME_MODE] = isDarkTheme
-        }
+    fun getThemePreference(): Boolean {
+        return sharedPreferences.getBoolean("dark_mode_state", false)
     }
 }

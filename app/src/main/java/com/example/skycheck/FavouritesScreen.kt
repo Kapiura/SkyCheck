@@ -35,16 +35,14 @@ fun FavouritesScreen(nav: NavController, viewModel: FavouriteViewModel) {
                 .padding(vertical = 8.dp)
         ) {
             items(cities) { city ->
-                // Item container with background and padding
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .background(color = Color.hsl(17F, 0.25F, 0.61F), shape = MaterialTheme.shapes.medium)
                         .clickable { nav.navigate("detailFav/${city.id}") }
-                        .padding(16.dp) // Inside padding for content
+                        .padding(16.dp)
                 ) {
-                    // Row for city name and button with spaced arrangement
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -52,7 +50,6 @@ fun FavouritesScreen(nav: NavController, viewModel: FavouriteViewModel) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // City name text
                         Text(
                             text = city.cityName,
                             fontSize = 20.sp,
@@ -61,10 +58,9 @@ fun FavouritesScreen(nav: NavController, viewModel: FavouriteViewModel) {
                             )
                         )
 
-                        // Delete button with the background color correctly set
                         Button(
                             onClick = { viewModel.delete(city) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.hsl(6F, 0.42F, 0.42F)) // containerColor for the background
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.hsl(6F, 0.42F, 0.42F))
                         ) {
                             Text("Usuń", color = Color.White)
                         }
@@ -74,7 +70,6 @@ fun FavouritesScreen(nav: NavController, viewModel: FavouriteViewModel) {
             }
         }
     } else {
-        // Message when no cities are added to favourites
         Text(
             text = "Brak miast dodanych do ulubionych",
             style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onBackground),

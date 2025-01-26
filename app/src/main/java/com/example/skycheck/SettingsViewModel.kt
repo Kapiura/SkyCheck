@@ -17,10 +17,10 @@ fun getDarkThemePreference(context: Context): Boolean {
 class SettingsViewModel(private val context: Context) : ViewModel() {
 
     fun saveDarkThemePreference(isDark: Boolean) {
-        saveDarkThemePreference(context, isDark)  // Wywołanie funkcji zapisującej z SharedPreferences
+        saveDarkThemePreference(context, isDark)
     }
 
     fun getDarkThemePreference(): Boolean {
-        return getDarkThemePreference(context)  // Wywołanie funkcji odczytującej z SharedPreferences
+        return getDarkThemePreference(context)
     }
 }

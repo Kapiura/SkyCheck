@@ -29,29 +29,30 @@ class MainActivity : ComponentActivity() {
 
         val repo = FavouriteRepo(FavouriteDatabase.getDatabase(this).favDao())
         val viewModelFactory = FavouriteViewModelFactory(repo)
-        val setviewModel = SettingsViewModel(applicationContext)
-        val isDarkTheme = setviewModel.getDarkThemePreference()
+        val themePreferenceManager = ThemePreferenceManager(this) // Dodano ThemePreferenceManager
 
         setContent {
-            // Przechowujemy stan motywu
-            val dynamicColor = remember { mutableStateOf(true) } // true = Dark, false = Light
-            val context = LocalContext.current
-            val themePreferenceManager = ThemePreferenceManager(context)
+            val isDarkTheme = remember { mutableStateOf(themePreferenceManager.getThemePreference()) }
 
             LaunchedEffect(Unit) {
                 themePreferenceManager.themePreference.collect { darkMode ->
-                    dynamicColor.value = darkMode
+                    isDarkTheme.value = darkMode
                 }
             }
 
-            SkyCheckTheme(darkTheme = dynamicColor.value) {
+            SkyCheckTheme(darkTheme = isDarkTheme.value) {
                 val navController = rememberNavController()
                 val viewModel: FavouriteViewModel = viewModel(factory = viewModelFactory)
 
-                // Przekazujemy dynamicColor do nawigacji
-                Navigation(nav = navController, viewModel = viewModel, isDarkTheme = dynamicColor)
+                Navigation(
+                    nav = navController,
+                    viewModel = viewModel,
+                    isDarkTheme = isDarkTheme,
+                    themePreferenceManager = themePreferenceManager
+                )
             }
         }
     }
 }
+
 

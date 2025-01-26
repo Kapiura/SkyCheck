@@ -1,12 +1,11 @@
 package com.example.skycheck
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.skycheck.BuildConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,9 +51,11 @@ fun FavouriteDetail(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Miasto: ${it.cityName}",
+                text = "Szczegóły dla miasta: ${it.cityName}",
                 fontSize = 24.sp,
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -64,6 +64,7 @@ fun FavouriteDetail(
             Text(
                 text = weatherInfo,
                 fontSize = 18.sp,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -79,13 +80,16 @@ fun FavouriteDetail(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             ) {
                 Text("Odśwież", fontSize = 16.sp)
             }
 
             Button(
                 onClick = { nav.navigate("forecast/${it.cityName}") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             ) {
                 Text("Zobacz prognozę", fontSize = 16.sp)
             }
@@ -109,7 +113,6 @@ fun FavouriteDetail(
     }
 }
 
-
 fun getWeatherInfo(
     cityName: String,
     apiKey: String,
@@ -121,10 +124,24 @@ fun getWeatherInfo(
             if (response.isSuccessful) {
                 val weather = response.body()
                 if (weather != null) {
-                    val weatherInfo = "Temperatura: ${weather.main.temp}°C\nMin Temp: ${weather.main.temp_min}°C\n" +
-                            "Max Temp: ${weather.main.temp_max}°C\nWilgotność: ${weather.main.humidity}%\n" +
-                            "Wiatr: ${weather.wind?.speed} m/s\nOpis: ${weather.weather[0].description}\n"
-                    onSuccess(weatherInfo)
+                    val weatherInfo = """
+                        Temperatura: ${weather.main.temp}°C
+                        Minimalna temperatura: ${weather.main.temp_min}°C
+                        Maksymalna temperatura: ${weather.main.temp_max}°C
+                        Wilgotność: ${weather.main.humidity}%
+                        Ciśnienie: ${weather.main.pressure} hPa
+                        Wiatr: ${weather.wind?.speed ?: "Brak danych"} m/s
+                        Kierunek wiatru: ${weather.wind?.deg ?: "Brak danych"}°
+                        Zachmurzenie: ${weather.clouds?.all ?: "Brak danych"}%
+                        
+                        Opis pogodowy:
+                    """.trimIndent()
+
+                    val weatherDescriptions = weather.weather.joinToString("\n") { desc ->
+                        "- ${desc.description.capitalize()}"
+                    }
+
+                    onSuccess("$weatherInfo\n$weatherDescriptions")
                 } else {
                     onFailure("Brak danych")
                 }

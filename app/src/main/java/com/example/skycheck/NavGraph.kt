@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 
 
 @Composable
-    fun NavGraph(nav: NavHostController, viewModel: FavouriteViewModel, isDarkTheme: MutableState<Boolean>) {
+    fun NavGraph(nav: NavHostController, viewModel: FavouriteViewModel, isDarkTheme: MutableState<Boolean>, themePreferenceManager: ThemePreferenceManager) {
         NavHost(
             navController = nav,
             startDestination = Screens.MainScreen.route
@@ -25,11 +25,11 @@ import androidx.navigation.navArgument
                 FavouritesScreen(nav = nav, viewModel = viewModel)
             }
             composable(Screens.SettingsScreen.route) {
-                // Przekazanie settingsDataStore do SettingsScreen
                 SettingsScreen(
-                    nav,
-                    viewModel,
-                    isDarkTheme,
+                    nav = nav,
+                    viewModel = viewModel,
+                    isDarkTheme = isDarkTheme,
+                    themePreferenceManager = themePreferenceManager
                 )
             }
             composable("weatherDetailsScreen/{city}") { backStackEntry ->

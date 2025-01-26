@@ -15,7 +15,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
-// BottomMenu.kt
 @Composable
 fun BottomMenu(nav: NavHostController) {
     val screens = listOf(

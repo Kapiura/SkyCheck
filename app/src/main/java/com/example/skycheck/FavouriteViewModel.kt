@@ -24,10 +24,8 @@ class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
         return repo.getCityById(cityId)
     }
 
-    // Funkcja sprawdzająca, czy miasto jest w ulubionych
     fun checkIfCityIsFavourite(cityName: String) {
         viewModelScope.launch {
-            // Wywołujemy zawartą funkcję w korutynie
             val cityExists = repo.isCityFavourite(cityName)
             _isCityFavourite.value = cityExists
         }
