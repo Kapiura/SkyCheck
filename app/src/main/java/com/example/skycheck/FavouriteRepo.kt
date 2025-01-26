@@ -2,8 +2,7 @@ package com.example.skycheck
 
 import kotlinx.coroutines.flow.Flow
 
-class FavouriteRepo(private val favDao: FavDao)
-{
+class FavouriteRepo(private val favDao: FavDao) {
     val allCities: Flow<List<Favourite>> = favDao.getAllCities()
 
     fun getCityById(cityId: Int): Flow<Favourite?> {
@@ -18,19 +17,17 @@ class FavouriteRepo(private val favDao: FavDao)
         return favDao.getCityByName(cityName) != null
     }
 
-    suspend fun insert(fav: Favourite)
-    {
-        favDao.insertGrade(fav)
+    suspend fun insert(fav: Favourite) {
+        val cleanCityName = normalizeCityName(fav.cityName)
+        favDao.insertGrade(fav.copy(cityName = cleanCityName))
     }
 
-    suspend fun update(fav: Favourite)
-    {
-        favDao.updateGrade(fav)
+    suspend fun update(fav: Favourite) {
+        val cleanCityName = normalizeCityName(fav.cityName)
+        favDao.updateGrade(fav.copy(cityName = cleanCityName))
     }
 
-    suspend fun delete(fav: Favourite)
-    {
+    suspend fun delete(fav: Favourite) {
         favDao.deleteGrade(fav)
     }
-
 }

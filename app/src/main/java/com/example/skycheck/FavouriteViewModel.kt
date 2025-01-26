@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
-class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
-{
+class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel() {
     val allCities: Flow<List<Favourite>> = repo.allCities
     private val _isCityFavourite = MutableLiveData<Boolean>()
     val isCityFavourite: LiveData<Boolean> get() = _isCityFavourite
@@ -26,7 +25,8 @@ class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
 
     fun checkIfCityIsFavourite(cityName: String) {
         viewModelScope.launch {
-            val cityExists = repo.isCityFavourite(cityName)
+            val normalizedCityName = normalizeCityName(cityName)
+            val cityExists = repo.isCityFavourite(normalizedCityName)
             _isCityFavourite.value = cityExists
         }
     }
@@ -37,19 +37,17 @@ class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
 
     suspend fun getCityByName(cityName: String): Favourite? = repo.getCityByName(cityName)
 
-
-    fun insert(fav: Favourite) = viewModelScope.launch{
+    fun insert(fav: Favourite) = viewModelScope.launch {
         repo.insert(fav)
     }
 
-    fun update(fav: Favourite) = viewModelScope.launch{
+    fun update(fav: Favourite) = viewModelScope.launch {
         repo.update(fav)
     }
 
-    fun delete(fav: Favourite) = viewModelScope.launch{
+    fun delete(fav: Favourite) = viewModelScope.launch {
         repo.delete(fav)
     }
-
 
     fun loadDarkThemePreference(context: Context) {
         val sharedPreferences = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
@@ -63,6 +61,27 @@ class FavouriteViewModel(private val repo: FavouriteRepo): ViewModel()
         editor.apply()
         _darkThemePreference.value = newValue
     }
+}
 
 
+fun normalizeCityName(cityName: String): String {
+    return cityName
+        .replace('ą', 'a')
+        .replace('ć', 'c')
+        .replace('ę', 'e')
+        .replace('ł', 'l')
+        .replace('ń', 'n')
+        .replace('ó', 'o')
+        .replace('ś', 's')
+        .replace('ź', 'z')
+        .replace('ż', 'z')
+        .replace('Ą', 'A')
+        .replace('Ć', 'C')
+        .replace('Ę', 'E')
+        .replace('Ł', 'L')
+        .replace('Ń', 'N')
+        .replace('Ó', 'O')
+        .replace('Ś', 'S')
+        .replace('Ź', 'Z')
+        .replace('Ż', 'Z')
 }

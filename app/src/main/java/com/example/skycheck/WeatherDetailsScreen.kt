@@ -28,13 +28,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import retrofit2.Response
+import java.text.Normalizer
+
 
 @Composable
 fun WeatherDetailsScreen(nav: NavController, city: String, viewModel: FavouriteViewModel) {
     var weatherData by remember { mutableStateOf<WeatherResponse?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val isCityFavourite by viewModel.isCityFavourite.observeAsState(false)
-    var isLoading by remember { mutableStateOf(false) }
 
     val apiKey = BuildConfig.API_KEY
     val weatherApi = RetrofitInstance.api
@@ -88,13 +90,12 @@ fun WeatherDetailsScreen(nav: NavController, city: String, viewModel: FavouriteV
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (!isCityFavourite) {
+            if (!isCityFavourite && !isLoading) {
                 Button(
                     onClick = {
                         isLoading = true
                         viewModel.insert(Favourite(cityName = data.name))
                         viewModel.checkIfCityIsFavourite(data.name)
-                        isLoading = false
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -108,7 +109,6 @@ fun WeatherDetailsScreen(nav: NavController, city: String, viewModel: FavouriteV
                     }
                 }
             }
-
             Button(
                 onClick = { nav.navigate("forecast/${data.name}") },
                 modifier = Modifier.fillMaxWidth()
@@ -117,7 +117,7 @@ fun WeatherDetailsScreen(nav: NavController, city: String, viewModel: FavouriteV
             }
         } ?: run {
             Text(
-                text = "Ładowanie danych...",
+                text = "Nie udało się pobrać danych pogodowych. Proszę sprawdzić, czy nazwa miasta jest poprawna i czy masz aktywne połączenie z internetem. Jeśli problem będzie się powtarzał, spróbuj ponownie później.",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(16.dp)
             )
