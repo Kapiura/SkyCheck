@@ -17,7 +17,7 @@ interface FavDao {
     fun getCityById(cityId: Int): Flow<Favourite?>
 
     @Query("SELECT EXISTS(SELECT 1 FROM favourites WHERE cityName = :cityName LIMIT 1)")
-    suspend fun isCityFavourite(cityName: String): Boolean  // Zwraca true, jeśli miasto jest w ulubionych
+    suspend fun isCityFavourite(cityName: String): Boolean
 
     @Query("SELECT * FROM favourites WHERE cityName = :cityName LIMIT 1")
     suspend fun getCityByName(cityName: String): Favourite?

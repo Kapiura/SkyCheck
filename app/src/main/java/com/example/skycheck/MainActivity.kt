@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
         val repo = FavouriteRepo(FavouriteDatabase.getDatabase(this).favDao())
         val viewModelFactory = FavouriteViewModelFactory(repo)
-        val themePreferenceManager = ThemePreferenceManager(this) // Dodano ThemePreferenceManager
+        val themePreferenceManager = ThemePreferenceManager(this)
 
         setContent {
             val isDarkTheme = remember { mutableStateOf(themePreferenceManager.getThemePreference()) }
